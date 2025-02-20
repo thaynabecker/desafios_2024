@@ -1,15 +1,99 @@
 <script>
-    const alunos = [
-        { nome: "Ana", notas: [7, 8, 9] },
-        { nome: "Carlos", notas: [5, 6, 4] },
-        { nome: "Bruna", notas: [9, 9, 10] }
+    const quartos = [
+        { numero: 101, tipo: "Standard", disponivel: true, preco: 150 },
+        { numero: 102, tipo: "Luxo", disponivel: true, preco: 300 },
+        { numero: 103, tipo: "Standard", disponivel: false, preco: 150 }
     ];
+
+    //Problema: Reserva de Hotel
     /*
-    1. Criar uma função calcularMedia(nome) que retorna a média de um aluno.
-    2. Criar uma função classificarAluno(nome) que retorna "Aprovado", "Recuperação" ou "Reprovado" com base na média.
-    3. Criar uma função adicionarNota(nome, nota) para incluir mais notas ao aluno.
-    4. Criar um menu interativo para buscar alunos, adicionar notas e verificar médias.
+    1. Criar uma função listarQuartosDisponiveis() que mostra apenas os quartos livres.
+    2. Criar uma função reservarQuarto(numero) que altera a disponibilidade do quarto.
+    3. Criar uma função cancelarReserva(numero) que libera um quarto ocupado.
+    4. Criar uma função calcularFaturamento() que soma o valor de todas as reservas feitas.
+    5. Criar um loop (while) para o usuário interagir com as opções até escolher sair (opção 0).
     */
 
-    
+    function listarQuartosDisponiveis() {
+        let disponiveis = quartos.filter(q => q.disponivel);
+        if (disponiveis.length === 0) {
+            alert("Não há quartos disponíveis.");
+        } else {
+            let mensagem = "Quartos disponíveis:\n";
+            disponiveis.forEach(q => {
+                mensagem += `Número: ${q.numero}, Tipo: ${q.tipo}, Preço: R$${q.preco}\n`;
+            });
+            alert(mensagem);
+        }
+    }
+
+    function reservarQuarto(numero) {
+        let quarto = quartos.find(q => q.numero === numero);
+        if (!quarto) {
+            alert("Quarto não encontrado.");
+        } else if (!quarto.disponivel) {
+            alert("O quarto já está reservado.");
+        } else {
+            quarto.disponivel = false;
+            alert(`Quarto ${numero} reservado com sucesso!`);
+        }
+    }
+
+    function cancelarReserva(numero) {
+        let quarto = quartos.find(q => q.numero === numero);
+        if (!quarto) {
+            alert("Quarto não encontrado.");
+        } else if (quarto.disponivel) {
+            alert("O quarto já está disponível.");
+        } else {
+            quarto.disponivel = true;
+            alert(`Reserva do quarto ${numero} cancelada!`);
+        }
+    }
+
+    function calcularFaturamento() {
+        let faturamento = quartos
+            .filter(q => !q.disponivel)
+            .reduce((acc, q) => acc + q.preco, 0);
+        alert(`Faturamento total: R$${faturamento}`);
+    }
+
+    function menu() {
+        let opcao;
+        while (opcao !== 0) {
+            opcao = Number(prompt(
+                "Escolha uma opção:\n" +
+                "1 - Listar Quartos Disponíveis\n" +
+                "2 - Reservar Quarto\n" +
+                "3 - Cancelar Reserva\n" +
+                "4 - Calcular Faturamento\n" +
+                "0 - Sair"
+            ));
+
+            switch (opcao) {
+                case 1:
+                    listarQuartosDisponiveis();
+                    break;
+                case 2:
+                    let numReservar = Number(prompt("Informe o número do quarto para reservar:"));
+                    reservarQuarto(numReservar);
+                    break;
+                case 3:
+                    let numCancelar = Number(prompt("Informe o número do quarto para cancelar a reserva:"));
+                    cancelarReserva(numCancelar);
+                    break;
+                case 4:
+                    calcularFaturamento();
+                    break;
+                case 0:
+                    alert("Saindo do sistema...");
+                    break;
+                default:
+                    alert("Opção inválida! Tente novamente.");
+            }
+        }
+    }
+
+    menu();
+
 </script>
